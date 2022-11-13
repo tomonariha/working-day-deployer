@@ -87,3 +87,469 @@ Processing by Rails::WelcomeController#index as HTML
 Completed 200 OK in 9ms (Views: 3.9ms | ActiveRecord: 0.0ms | Allocations: 4112)
 
 
+Started GET "/calendars/index" for ::1 at 2022-11-13 01:31:26 +0900
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering calendars/index.html.erb within layouts/application
+  Rendered calendars/index.html.erb within layouts/application (Duration: 0.5ms | Allocations: 332)
+Building with Vite ⚡️
+vite v3.2.3 building for development...
+
+transforming...
+
+✓ 1 modules transformed.
+
+rendering chunks...
+
+../../public/vite-dev/manifest-assets.json             0.00 KiB
+
+../../public/vite-dev/manifest.json                    0.14 KiB
+
+../../public/vite-dev/assets/application.ff486227.js   0.13 KiB / gzip: 0.13 KiB
+
+Build with Vite complete: /Users/tomonarihajime/ruby_practices/working-day-deployer/public/vite-dev
+  Rendered layout layouts/application.html.erb (Duration: 870.9ms | Allocations: 100221)
+Completed 200 OK in 876ms (Views: 872.7ms | ActiveRecord: 0.0ms | Allocations: 103546)
+
+
+Started GET "/calendars/index" for ::1 at 2022-11-13 01:32:43 +0900
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering calendars/index.html.erb within layouts/application
+  Rendered calendars/index.html.erb within layouts/application (Duration: 0.5ms | Allocations: 332)
+Building with Vite ⚡️
+vite v3.2.3 building for development...
+
+transforming...
+
+✓ 1 modules transformed.
+
+rendering chunks...
+
+../../public/vite-dev/manifest-assets.json             0.00 KiB
+
+../../public/vite-dev/manifest.json                    0.14 KiB
+
+../../public/vite-dev/assets/application.ff486227.js   0.13 KiB / gzip: 0.13 KiB
+
+Build with Vite complete: /Users/tomonarihajime/ruby_practices/working-day-deployer/public/vite-dev
+  Rendered layout layouts/application.html.erb (Duration: 409.1ms | Allocations: 30373)
+Completed 200 OK in 414ms (Views: 410.8ms | ActiveRecord: 0.0ms | Allocations: 33699)
+
+
+Started GET "/calendars/index" for ::1 at 2022-11-13 01:33:51 +0900
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering calendars/index.html.erb within layouts/application
+  Rendered calendars/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 9)
+Skipping vite build. Watched files have not changed since the last build at 2022-11-13 01:32:43
+  Rendered layout layouts/application.html.erb (Duration: 22.3ms | Allocations: 9154)
+Completed 200 OK in 24ms (Views: 23.2ms | ActiveRecord: 0.0ms | Allocations: 9457)
+
+
+Started GET "/calendars/index" for ::1 at 2022-11-13 01:34:16 +0900
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering calendars/index.html.erb within layouts/application
+  Rendered calendars/index.html.erb within layouts/application (Duration: 0.5ms | Allocations: 332)
+Skipping vite build. Watched files have not changed since the last build at 2022-11-13 01:32:43
+  Rendered layout layouts/application.html.erb (Duration: 63.7ms | Allocations: 29168)
+Completed 200 OK in 68ms (Views: 65.3ms | ActiveRecord: 0.0ms | Allocations: 32495)
+
+
+Started GET "/calendars/index" for ::1 at 2022-11-13 01:35:04 +0900
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering calendars/index.html.erb within layouts/application
+  Rendered calendars/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 9)
+Skipping vite build. Watched files have not changed since the last build at 2022-11-13 01:32:43
+  Rendered layout layouts/application.html.erb (Duration: 24.5ms | Allocations: 9176)
+Completed 200 OK in 30ms (Views: 26.0ms | ActiveRecord: 0.0ms | Allocations: 9479)
+
+
+Started GET "/calendars/index" for ::1 at 2022-11-13 01:36:22 +0900
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering calendars/index.html.erb within layouts/application
+  Rendered calendars/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 7)
+Building with Vite ⚡️
+vite v3.2.3 building for development...
+
+transforming...
+
+✓ 1 modules transformed.
+
+[vite:build-import-analysis] Parse error @:2:29
+file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:2:28
+1: <template>
+2:   <p>{{ state.message }}</p>
+                               ^
+3: </template>
+error during build:
+Error: Parse error @:2:29
+    at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+    at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+pid 82525 exit 1
+Build with Vite failed! ❌
+  Rendered layout layouts/application.html.erb (Duration: 407.1ms | Allocations: 12744)
+Completed 500 Internal Server Error in 409ms (ActiveRecord: 0.0ms | Allocations: 13011)
+
+
+  
+ActionView::Template::Error (Vite Ruby can't find entrypoints/application.js in public/vite-dev/manifest.json or public/vite-dev/manifest-assets.json.
+
+Possible causes:
+  - The last build failed. Try running `bin/vite build --clear --mode=development` manually and check for errors.
+
+Errors:
+  [vite:build-import-analysis] Parse error @:2:29
+  file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:2:28
+  1: <template>
+  2:   <p>{{ state.message }}</p>
+                                 ^
+  3: </template>
+  error during build:
+  Error: Parse error @:2:29
+      at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+      at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+
+Visit the Troubleshooting guide for more information:
+  https://vite-ruby.netlify.app/guide/troubleshooting.html#troubleshooting
+
+
+
+):
+     9:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    11:     <%= vite_client_tag %>
+    12:     <%= vite_javascript_tag 'application' %>
+    13:     <!--
+    14:       If using a TypeScript entrypoint file:
+    15:         vite_typescript_tag 'application'
+  
+app/views/layouts/application.html.erb:12
+Started GET "/calendars/index" for ::1 at 2022-11-13 01:38:52 +0900
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering calendars/index.html.erb within layouts/application
+  Rendered calendars/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 7)
+Building with Vite ⚡️
+vite v3.2.3 building for development...
+
+transforming...
+
+✓ 1 modules transformed.
+
+[vite:build-import-analysis] Parse error @:2:29
+file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:2:28
+1: <template>
+2:   <p>{{ state.message }}</p>
+                               ^
+3: </template>
+error during build:
+Error: Parse error @:2:29
+    at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+    at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+pid 82596 exit 1
+Build with Vite failed! ❌
+  Rendered layout layouts/application.html.erb (Duration: 462.8ms | Allocations: 7659)
+Completed 500 Internal Server Error in 464ms (ActiveRecord: 0.0ms | Allocations: 7911)
+
+
+  
+ActionView::Template::Error (Vite Ruby can't find entrypoints/application.js in public/vite-dev/manifest.json or public/vite-dev/manifest-assets.json.
+
+Possible causes:
+  - The last build failed. Try running `bin/vite build --clear --mode=development` manually and check for errors.
+
+Errors:
+  [vite:build-import-analysis] Parse error @:2:29
+  file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:2:28
+  1: <template>
+  2:   <p>{{ state.message }}</p>
+                                 ^
+  3: </template>
+  error during build:
+  Error: Parse error @:2:29
+      at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+      at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+
+Visit the Troubleshooting guide for more information:
+  https://vite-ruby.netlify.app/guide/troubleshooting.html#troubleshooting
+
+
+
+):
+     9:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    11:     <%= vite_client_tag %>
+    12:     <%= vite_javascript_tag 'application' %>
+    13:     <!--
+    14:       If using a TypeScript entrypoint file:
+    15:         vite_typescript_tag 'application'
+  
+app/views/layouts/application.html.erb:12
+Started GET "/calendars/index" for ::1 at 2022-11-13 22:54:05 +0900
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering calendars/index.html.erb within layouts/application
+  Rendered calendars/index.html.erb within layouts/application (Duration: 0.5ms | Allocations: 332)
+Building with Vite ⚡️
+vite v3.2.3 building for development...
+
+transforming...
+
+✓ 1 modules transformed.
+
+[vite:build-import-analysis] Parse error @:2:29
+file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:2:28
+1: <template>
+2:   <p>{{ state.message }}</p>
+                               ^
+3: </template>
+error during build:
+Error: Parse error @:2:29
+    at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+    at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+pid 86810 exit 1
+Build with Vite failed! ❌
+  Rendered layout layouts/application.html.erb (Duration: 408.2ms | Allocations: 29561)
+Completed 500 Internal Server Error in 412ms (ActiveRecord: 0.0ms | Allocations: 32832)
+
+
+  
+ActionView::Template::Error (Vite Ruby can't find entrypoints/application.js in public/vite-dev/manifest.json or public/vite-dev/manifest-assets.json.
+
+Possible causes:
+  - The last build failed. Try running `bin/vite build --clear --mode=development` manually and check for errors.
+
+Errors:
+  [vite:build-import-analysis] Parse error @:2:29
+  file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:2:28
+  1: <template>
+  2:   <p>{{ state.message }}</p>
+                                 ^
+  3: </template>
+  error during build:
+  Error: Parse error @:2:29
+      at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+      at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+
+Visit the Troubleshooting guide for more information:
+  https://vite-ruby.netlify.app/guide/troubleshooting.html#troubleshooting
+
+
+
+):
+     9:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    11:     <%= vite_client_tag %>
+    12:     <%= vite_javascript_tag 'application' %>
+    13:     <!--
+    14:       If using a TypeScript entrypoint file:
+    15:         vite_typescript_tag 'application'
+  
+app/views/layouts/application.html.erb:12
+Started GET "/calendars/index" for ::1 at 2022-11-13 22:56:35 +0900
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering calendars/index.html.erb within layouts/application
+  Rendered calendars/index.html.erb within layouts/application (Duration: 0.1ms | Allocations: 7)
+Building with Vite ⚡️
+vite v3.2.3 building for development...
+
+transforming...
+
+✓ 1 modules transformed.
+
+[vite:build-import-analysis] Parse error @:2:29
+file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:2:28
+1: <template>
+2:   <p>{{ state.message }}</p>
+                               ^
+3: </template>
+error during build:
+Error: Parse error @:2:29
+    at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+    at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+pid 86903 exit 1
+Build with Vite failed! ❌
+  Rendered layout layouts/application.html.erb (Duration: 394.5ms | Allocations: 7565)
+Completed 500 Internal Server Error in 398ms (ActiveRecord: 0.0ms | Allocations: 7819)
+
+
+  
+ActionView::Template::Error (Vite Ruby can't find entrypoints/application.js in public/vite-dev/manifest.json or public/vite-dev/manifest-assets.json.
+
+Possible causes:
+  - The last build failed. Try running `bin/vite build --clear --mode=development` manually and check for errors.
+
+Errors:
+  [vite:build-import-analysis] Parse error @:2:29
+  file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:2:28
+  1: <template>
+  2:   <p>{{ state.message }}</p>
+                                 ^
+  3: </template>
+  error during build:
+  Error: Parse error @:2:29
+      at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+      at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+
+Visit the Troubleshooting guide for more information:
+  https://vite-ruby.netlify.app/guide/troubleshooting.html#troubleshooting
+
+
+
+):
+     9:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    11:     <%= vite_client_tag %>
+    12:     <%= vite_javascript_tag 'application' %>
+    13:     <!--
+    14:       If using a TypeScript entrypoint file:
+    15:         vite_typescript_tag 'application'
+  
+app/views/layouts/application.html.erb:12
+Started GET "/calendars/index" for ::1 at 2022-11-13 22:59:58 +0900
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering calendars/index.html.erb within layouts/application
+  Rendered calendars/index.html.erb within layouts/application (Duration: 1.1ms | Allocations: 7)
+Building with Vite ⚡️
+vite v3.2.3 building for development...
+
+transforming...
+
+✓ 1 modules transformed.
+
+[vite:build-import-analysis] Parse error @:3:12
+file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:3:11
+1: <template>
+2:   p {{ state.message }}
+3: </template>
+              ^
+4: 
+5: <script>
+error during build:
+Error: Parse error @:3:12
+    at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+    at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+pid 87007 exit 1
+Build with Vite failed! ❌
+  Rendered layout layouts/application.html.erb (Duration: 388.1ms | Allocations: 7329)
+Completed 500 Internal Server Error in 392ms (ActiveRecord: 0.0ms | Allocations: 7544)
+
+
+  
+ActionView::Template::Error (Vite Ruby can't find entrypoints/application.js in public/vite-dev/manifest.json or public/vite-dev/manifest-assets.json.
+
+Possible causes:
+  - The last build failed. Try running `bin/vite build --clear --mode=development` manually and check for errors.
+
+Errors:
+  [vite:build-import-analysis] Parse error @:3:12
+  file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:3:11
+  1: <template>
+  2:   p {{ state.message }}
+  3: </template>
+                ^
+  4: 
+  5: <script>
+  error during build:
+  Error: Parse error @:3:12
+      at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+      at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+
+Visit the Troubleshooting guide for more information:
+  https://vite-ruby.netlify.app/guide/troubleshooting.html#troubleshooting
+
+
+
+):
+     9:     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    10:     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    11:     <%= vite_client_tag %>
+    12:     <%= vite_javascript_tag 'application' %>
+    13:     <!--
+    14:       If using a TypeScript entrypoint file:
+    15:         vite_typescript_tag 'application'
+  
+app/views/layouts/application.html.erb:12
+Started GET "/calendars/index" for ::1 at 2022-11-13 23:08:09 +0900
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by CalendarsController#index as HTML
+  Rendering layout layouts/application.html.slim
+  Rendering calendars/index.html.slim within layouts/application
+  Rendered calendars/index.html.slim within layouts/application (Duration: 5.0ms | Allocations: 9675)
+Building with Vite ⚡️
+vite v3.2.3 building for development...
+
+transforming...
+
+✓ 1 modules transformed.
+
+[vite:build-import-analysis] Parse error @:2:31
+file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:2:30
+1: <template>
+2:   <p> {{ state.message }} </p>
+                                 ^
+3: </template>
+error during build:
+Error: Parse error @:2:31
+    at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+    at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+pid 87711 exit 1
+Build with Vite failed! ❌
+  Rendered layout layouts/application.html.slim (Duration: 371.5ms | Allocations: 42243)
+Completed 500 Internal Server Error in 376ms (ActiveRecord: 0.0ms | Allocations: 45560)
+
+
+  
+ActionView::Template::Error (Vite Ruby can't find entrypoints/application.js in public/vite-dev/manifest.json or public/vite-dev/manifest-assets.json.
+
+Possible causes:
+  - The last build failed. Try running `bin/vite build --clear --mode=development` manually and check for errors.
+
+Errors:
+  [vite:build-import-analysis] Parse error @:2:31
+  file: /Users/tomonarihajime/ruby_practices/working-day-deployer/app/javascript/app.vue:2:30
+  1: <template>
+  2:   <p> {{ state.message }} </p>
+                                   ^
+  3: </template>
+  error during build:
+  Error: Parse error @:2:31
+      at parse$b (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:32639:355)
+      at Object.transform (file:///Users/tomonarihajime/ruby_practices/working-day-deployer/node_modules/vite/dist/node/chunks/dep-51c4f80a.js:42077:27)
+
+
+Visit the Troubleshooting guide for more information:
+  https://vite-ruby.netlify.app/guide/troubleshooting.html#troubleshooting
+
+
+
+):
+     9:     = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    10:     = javascript_include_tag "application", "data-turbo-track": "reload", defer: true
+    11:     = vite_client_tag
+    12:     = vite_javascript_tag 'application'
+    13:   body
+    14:     = yield
+  
+app/views/layouts/application.html.slim:12
