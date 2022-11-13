@@ -13,6 +13,11 @@
 !/log/.keep
 !/tmp/.keep
 
+# Ignore pidfiles, but keep the directory.
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
 # Vite Ruby
 /public/vite*
 node_modules
