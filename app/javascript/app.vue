@@ -29,14 +29,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'App',
-  setup() {
-    return {
-      state: {
-        message: "Hello Vue3 "
-      }
-    }
-  },
+  name: 'Calendar',
   data() {
     return {
       currentYear: this.getCurrentYear(),
