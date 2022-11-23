@@ -54,6 +54,7 @@ gem "bootsnap", require: false
 gem "vite_rails"
 gem "slim-rails"
 gem "html2slim"
+gem "devise"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
