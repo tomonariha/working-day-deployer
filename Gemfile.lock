@@ -84,6 +84,8 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    devise-i18n (1.10.2)
+      devise (>= 4.8.0)
     dry-cli (0.7.0)
     erubi (1.11.0)
     globalid (1.0.0)
@@ -217,6 +219,7 @@ DEPENDENCIES
   cssbundling-rails
   debug
   devise
+  devise-i18n
   html2slim
   jbuilder
   jsbundling-rails
