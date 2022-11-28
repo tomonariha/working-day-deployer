@@ -18,7 +18,9 @@
       <tr class="calendar__week">
         <td class="calendar__day" 
             v-for='date in week.value'
-            :key='date.weekDay'>{{ date.date }}
+            :key='date.weekDay'>
+            <div class="calendar__day-label">{{ date.date }}</div>
+            <div class="calendar__day-value">●</div>
         </td>
       </tr>
     </tbody>
