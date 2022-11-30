@@ -1,4 +1,5 @@
 <template>
+  <p>{{ schedules }}</p>
   <button class="calendar-nav__previous" @click='previousMonth'>前</button>
   <button class="calendar-nav__next" @click='nextMonth'>後</button>
   <div class="calendar-nav__year--month">{{ calendarYear }}年{{ calendarMonth }}月</div>
@@ -34,6 +35,7 @@ export default defineComponent({
   name: 'Calendar',
   data() {
     return {
+      schedules: [],
       currentYear: this.getCurrentYear(),
       currentMonth: this.getCurrentMonth(),
       calendarYear: this.getCurrentYear(),
@@ -41,6 +43,9 @@ export default defineComponent({
       today: this.getCurrentDay(),
       loaded: null
     }
+  },
+  props: {
+    userId: { type: String, required: true }
   },
   computed: {
     firstWday() {
@@ -82,7 +87,33 @@ export default defineComponent({
       return calendar
     },
   },
+  mounted() {
+    fetch(`/api/calendars/${this.userId}.json`, {
+      method: 'GET',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': this.token()
+      },
+      credentials: 'same-origin'
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((json) => {
+        json.forEach((r) => {
+          this.schedules.push(r)
+        })
+        this.loaded = true
+      })
+      .catch((error) => {
+        console.warn(error)
+      })
+  },
   methods: {
+    token() {
+      const meta = document.querySelector('meta[name="csrf-token"]')
+      return meta ? meta.getAttribute('content') : ''
+    },
     getCurrentYear() {
       return new Date().getFullYear()
     },
