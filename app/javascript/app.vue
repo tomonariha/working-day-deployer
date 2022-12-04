@@ -1,5 +1,4 @@
 <template>
-  <p>{{ schedules }}</p>
   <button class="calendar-nav__previous" @click='previousMonth'>前</button>
   <button class="calendar-nav__next" @click='nextMonth'>後</button>
   <div class="calendar-nav__year--month">{{ calendarYear }}年{{ calendarMonth }}月</div>
@@ -21,7 +20,12 @@
             v-for='date in week.value'
             :key='date.weekDay'>
             <div class="calendar__day-label">{{ date.date }}</div>
-            <div class="calendar__day-value">●</div>
+            <Popper arrow>
+              <button>{{ scheduleMark[date.schedule] }}</button>
+                <template #content>
+                  <div>{{date.date}}</div>
+                </template>
+            </Popper>
         </td>
       </tr>
     </tbody>
@@ -30,12 +34,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Popper from "vue3-popper"
 
 export default defineComponent({
   name: 'Calendar',
   data() {
     return {
-      schedules: [],
+      scheduleMark: { "full-time":"●" },
+      calendarDays: [],
       currentYear: this.getCurrentYear(),
       currentMonth: this.getCurrentMonth(),
       calendarYear: this.getCurrentYear(),
@@ -82,7 +88,16 @@ export default defineComponent({
         }
       }
       for (let date = 1; date <= this.lastDate; date++) {
-        calendar.push({ date: date })
+        const result = this.calendarDays.filter((day) =>
+          day.date.includes(
+            `${this.calendarYear}-${this.formatMonth(this.calendarMonth)}-${this.formatDay(date)}`
+          )
+        )
+        if (result.length > 0) {
+          calendar.push({ date: date, schedule: result[0].schedule })
+        } else {
+          calendar.push({ date: date })
+        }
       }
       return calendar
     },
@@ -101,7 +116,7 @@ export default defineComponent({
       })
       .then((json) => {
         json.forEach((r) => {
-          this.schedules.push(r)
+          this.calendarDays.push(r)
         })
         this.loaded = true
       })
@@ -113,6 +128,12 @@ export default defineComponent({
     token() {
       const meta = document.querySelector('meta[name="csrf-token"]')
       return meta ? meta.getAttribute('content') : ''
+    },
+    formatDay(day) {
+      return day.toString().padStart(2, '0')
+    },
+    formatMonth(month) {
+      return month.toString().padStart(2, '0')
     },
     getCurrentYear() {
       return new Date().getFullYear()
@@ -143,6 +164,9 @@ export default defineComponent({
       }
       this.$nextTick(() => (this.loaded = true))
     },
-  }
+  },
+  components: {
+    Popper,
+  },
 })
 </script>

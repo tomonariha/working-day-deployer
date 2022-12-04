@@ -1,1 +1,1 @@
-json.array! @calendars, :year, :id
+json.array! @calendars
