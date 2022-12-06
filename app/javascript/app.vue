@@ -22,9 +22,10 @@
             <div class="calendar__day-label">{{ date.date }}</div>
             <Popper arrow>
               <button>{{ scheduleMark[date.schedule] }}</button>
-                <template #content>
-                  <div>{{date.date}}</div>
-                </template>
+              <template #content>
+                <scheduler>
+                </scheduler>
+              </template>
             </Popper>
         </td>
       </tr>
@@ -80,7 +81,7 @@ export default defineComponent({
       })
       return weeksAry
     },
-     calendarDates() {
+    calendarDates() {
       const calendar = []
       if (this.firstWday > 0) {
         for (let blank = 0; blank < this.firstWday; blank++) {
