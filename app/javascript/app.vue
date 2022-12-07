@@ -21,10 +21,11 @@
             :key='date.weekDay'>
             <div class="calendar__day-label">{{ date.date }}</div>
             <Popper arrow>
-              <button>{{ scheduleMark[date.schedule] }}</button>
+              <button>{{ scheduleToMark[date.schedule] }}</button>
               <template #content>
-                <scheduler>
-                </scheduler>
+                <div v-for="schedule in schedules" :key="schedule">
+                  <button v-on:click="changeSchedule(date, schedule)">{{ schedule }}{{date}}</button>
+                </div>
               </template>
             </Popper>
         </td>
@@ -41,7 +42,9 @@ export default defineComponent({
   name: 'Calendar',
   data() {
     return {
-      scheduleMark: { "full-time":"●" },
+      schedules: ["●","▲","△","□"],
+      markToSchedule: { "●":"full-time", "▲":"morning", "△":"afternoon", "□":"off" },
+      scheduleToMark: { "full-time":"●", "morning":"▲", "afternoon":"△", "off":"□" },
       calendarDays: [],
       currentYear: this.getCurrentYear(),
       currentMonth: this.getCurrentMonth(),
@@ -164,6 +167,22 @@ export default defineComponent({
         this.calendarMonth++
       }
       this.$nextTick(() => (this.loaded = true))
+    },
+    changeSchedule(date, schedule) {
+      date.schedule = this.markToSchedule[schedule]
+      this.updateCalendar(date)
+    },
+    updateCalendar(date) {
+      fetch(`days/${this.currentYear}/${this.currentMonth}`, {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': this.token(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(date),
+      credentials: 'same-origin'
+      })
     },
   },
   components: {
