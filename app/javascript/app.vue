@@ -20,7 +20,7 @@
             v-for='date in week.value'
             :key='date.weekDay'>
             <div class="calendar__day-label">{{ date.date }}</div>
-            <Popper arrow>
+            <Popper arrow v-if="date.date > 0">
               <button>{{ scheduleToMark[date.schedule] }}</button>
               <template #content>
                 <div v-for="schedule in schedules" :key="schedule">
@@ -107,7 +107,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    fetch(`/api/calendars/${this.userId}.json`, {
+    fetch(`/api/calendars/${this.currentYear}.json`, {
       method: 'GET',
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
@@ -182,6 +182,12 @@ export default defineComponent({
       },
       body: JSON.stringify(date),
       credentials: 'same-origin'
+      })
+      .then(() => {
+        
+      })
+      .catch((error) => {
+        console.warn(error)
       })
     },
   },
