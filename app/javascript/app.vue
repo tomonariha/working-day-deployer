@@ -1,4 +1,5 @@
 <template>
+  <p>{{calendarDays}}</p>
   <button class="calendar-nav__previous" @click='previousMonth'>前</button>
   <button class="calendar-nav__next" @click='nextMonth'>後</button>
   <div class="calendar-nav__year--month">{{ calendarYear }}年{{ calendarMonth }}月</div>
@@ -24,7 +25,7 @@
               <button>{{ scheduleToMark[date.schedule] }}</button>
               <template #content>
                 <div v-for="schedule in schedules" :key="schedule">
-                  <button v-on:click="changeSchedule(date, schedule)">{{ schedule }}{{date}}</button>
+                  <button v-on:click="changeSchedule(date, schedule)">{{ schedule }}</button>
                 </div>
               </template>
             </Popper>
@@ -171,9 +172,10 @@ export default defineComponent({
     changeSchedule(date, schedule) {
       date.schedule = this.markToSchedule[schedule]
       this.updateCalendar(date)
+      this.$nextTick(() => this.fetchCalendar())
     },
     updateCalendar(date) {
-      fetch(`days/${this.currentYear}/${this.currentMonth}`, {
+      fetch(`days/${this.calendarYear}/${this.calendarMonth}`, {
       method: 'POST',
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
@@ -183,8 +185,28 @@ export default defineComponent({
       body: JSON.stringify(date),
       credentials: 'same-origin'
       })
-      .then(() => {
-        
+      .catch((error) => {
+        console.warn(error)
+      })
+    },
+    fetchCalendar() {
+      fetch(`/api/calendars/${this.currentYear}.json`, {
+      method: 'GET',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': this.token()
+      },
+      credentials: 'same-origin'
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((json) => {
+        this.calendarDays = []
+        json.forEach((r) => {
+          this.calendarDays.push(r)
+        })
+        this.loaded = true
       })
       .catch((error) => {
         console.warn(error)
