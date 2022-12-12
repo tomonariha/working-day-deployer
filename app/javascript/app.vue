@@ -1,5 +1,10 @@
 <template>
-  <p>{{calendarDays}}</p>
+  <button v-on:click="openModal()">モーダル開く</button>
+    <div id=overlay  v-show="showContent">
+      <div id=content>
+        <Modal v-on:close="closeModal()"></Modal>
+      </div>
+    </div>
   <button class="calendar-nav__previous" @click='previousMonth'>前</button>
   <button class="calendar-nav__next" @click='nextMonth'>後</button>
   <div class="calendar-nav__year--month">{{ calendarYear }}年{{ calendarMonth }}月</div>
@@ -37,7 +42,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Popper from "vue3-popper"
+import Popper from 'vue3-popper'
+import Modal from './components/setting_modal.vue' 
 
 export default defineComponent({
   name: 'Calendar',
@@ -52,7 +58,8 @@ export default defineComponent({
       calendarYear: this.getCurrentYear(),
       calendarMonth: this.getCurrentMonth(),
       today: this.getCurrentDay(),
-      loaded: null
+      loaded: null,
+      showContent: false,
     }
   },
   props: {
@@ -172,7 +179,7 @@ export default defineComponent({
     changeSchedule(date, schedule) {
       date.schedule = this.markToSchedule[schedule]
       this.updateCalendar(date)
-      this.$nextTick(() => this.fetchCalendar())
+      this.$nextTick(() => (this.fetchCalendar()))
     },
     updateCalendar(date) {
       fetch(`days/${this.calendarYear}/${this.calendarMonth}`, {
@@ -197,7 +204,7 @@ export default defineComponent({
         'X-CSRF-Token': this.token()
       },
       credentials: 'same-origin'
-    })
+      })
       .then((response) => {
         return response.json()
       })
@@ -212,9 +219,37 @@ export default defineComponent({
         console.warn(error)
       })
     },
+    openModal() {
+      this.showContent = true
+    },
+    closeModal() {
+      this.showContent = false
+    }
   },
   components: {
     Popper,
+    Modal,
   },
 })
 </script>
+
+<style>
+#overlay{
+  z-index:1;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color:rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#content{
+  z-index:2;
+  width:50%;
+  padding: 1em;
+  background:#fff;
+}
+</style>
