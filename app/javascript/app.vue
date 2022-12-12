@@ -115,26 +115,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    fetch(`/api/calendars/${this.currentYear}.json`, {
-      method: 'GET',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRF-Token': this.token()
-      },
-      credentials: 'same-origin'
-    })
-      .then((response) => {
-        return response.json()
-      })
-      .then((json) => {
-        json.forEach((r) => {
-          this.calendarDays.push(r)
-        })
-        this.loaded = true
-      })
-      .catch((error) => {
-        console.warn(error)
-      })
+    this.fetchCalendar()
   },
   methods: {
     token() {
