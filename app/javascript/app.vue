@@ -1,4 +1,10 @@
 <template>
+  <button v-on:click="openModal()">モーダル開く</button>
+    <div id=overlay  v-show="showContent">
+      <div id=content>
+        <Modal v-on:close="closeModal()"></Modal>
+      </div>
+    </div>
   <button class="calendar-nav__previous" @click='previousMonth'>前</button>
   <button class="calendar-nav__next" @click='nextMonth'>後</button>
   <div class="calendar-nav__year--month">{{ calendarYear }}年{{ calendarMonth }}月</div>
@@ -18,7 +24,16 @@
       <tr class="calendar__week">
         <td class="calendar__day" 
             v-for='date in week.value'
-            :key='date.weekDay'>{{ date.date }}
+            :key='date.weekDay'>
+            <div class="calendar__day-label">{{ date.date }}</div>
+            <Popper arrow v-if="date.date > 0">
+              <button>{{ scheduleToMark[date.schedule] }}</button>
+              <template #content>
+                <div v-for="schedule in schedules" :key="schedule">
+                  <button v-on:click="changeSchedule(date, schedule)">{{ schedule }}</button>
+                </div>
+              </template>
+            </Popper>
         </td>
       </tr>
     </tbody>
@@ -27,18 +42,28 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Popper from 'vue3-popper'
+import Modal from './components/setting_modal.vue' 
 
 export default defineComponent({
   name: 'Calendar',
   data() {
     return {
+      schedules: ["●","▲","△","□"],
+      markToSchedule: { "●":"full-time", "▲":"morning", "△":"afternoon", "□":"off" },
+      scheduleToMark: { "full-time":"●", "morning":"▲", "afternoon":"△", "off":"□" },
+      calendarDays: [],
       currentYear: this.getCurrentYear(),
       currentMonth: this.getCurrentMonth(),
       calendarYear: this.getCurrentYear(),
       calendarMonth: this.getCurrentMonth(),
       today: this.getCurrentDay(),
-      loaded: null
+      loaded: null,
+      showContent: false,
     }
+  },
+  props: {
+    userId: { type: String, required: true }
   },
   computed: {
     firstWday() {
@@ -67,7 +92,7 @@ export default defineComponent({
       })
       return weeksAry
     },
-     calendarDates() {
+    calendarDates() {
       const calendar = []
       if (this.firstWday > 0) {
         for (let blank = 0; blank < this.firstWday; blank++) {
@@ -75,12 +100,34 @@ export default defineComponent({
         }
       }
       for (let date = 1; date <= this.lastDate; date++) {
-        calendar.push({ date: date })
+        const result = this.calendarDays.filter((day) =>
+          day.date.includes(
+            `${this.calendarYear}-${this.formatMonth(this.calendarMonth)}-${this.formatDay(date)}`
+          )
+        )
+        if (result.length > 0) {
+          calendar.push({ date: date, schedule: result[0].schedule })
+        } else {
+          calendar.push({ date: date })
+        }
       }
       return calendar
     },
   },
+  mounted() {
+    this.fetchCalendar()
+  },
   methods: {
+    token() {
+      const meta = document.querySelector('meta[name="csrf-token"]')
+      return meta ? meta.getAttribute('content') : ''
+    },
+    formatDay(day) {
+      return day.toString().padStart(2, '0')
+    },
+    formatMonth(month) {
+      return month.toString().padStart(2, '0')
+    },
     getCurrentYear() {
       return new Date().getFullYear()
     },
@@ -110,6 +157,80 @@ export default defineComponent({
       }
       this.$nextTick(() => (this.loaded = true))
     },
-  }
+    changeSchedule(date, schedule) {
+      date.schedule = this.markToSchedule[schedule]
+      this.updateCalendar(date)
+      this.$nextTick(() => (this.fetchCalendar()))
+    },
+    updateCalendar(date) {
+      fetch(`days/${this.calendarYear}/${this.calendarMonth}`, {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': this.token(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(date),
+      credentials: 'same-origin'
+      })
+      .catch((error) => {
+        console.warn(error)
+      })
+    },
+    fetchCalendar() {
+      fetch(`/api/calendars/${this.currentYear}.json`, {
+      method: 'GET',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': this.token()
+      },
+      credentials: 'same-origin'
+      })
+      .then((response) => {
+        return response.json()
+      })
+      .then((json) => {
+        this.calendarDays = []
+        json.forEach((r) => {
+          this.calendarDays.push(r)
+        })
+        this.loaded = true
+      })
+      .catch((error) => {
+        console.warn(error)
+      })
+    },
+    openModal() {
+      this.showContent = true
+    },
+    closeModal() {
+      this.showContent = false
+    }
+  },
+  components: {
+    Popper,
+    Modal,
+  },
 })
 </script>
+
+<style>
+#overlay{
+  z-index:1;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color:rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#content{
+  z-index:2;
+  width:50%;
+  padding: 1em;
+  background:#fff;
+}
+</style>
