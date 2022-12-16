@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DaysController < ApplicationController
   def update
     @calendar = User.find(current_user.id).calendars.find_by(year: params[:year])
