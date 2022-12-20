@@ -24,16 +24,9 @@
       <tr class="calendar__week">
         <td class="calendar__day" 
             v-for='date in week.value'
-            :key='date.weekDay'>
+            :key='date.date'>
             <div class="calendar__day-label">{{ date.date }}</div>
-            <Popper arrow v-if="date.date > 0">
-              <button>{{ scheduleToMark[date.schedule] }}</button>
-              <template #content>
-                <div v-for="schedule in schedules" :key="schedule">
-                  <button v-on:click="changeSchedule(date, schedule)">{{ schedule }}</button>
-                </div>
-              </template>
-            </Popper>
+            <Day v-bind:date="date" v-if="date.date > 0"></Day>
         </td>
       </tr>
     </tbody>
@@ -44,6 +37,7 @@
 import { defineComponent } from 'vue'
 import Popper from 'vue3-popper'
 import Modal from './components/setting_modal.vue' 
+import Day from './components/day.vue' 
 
 export default defineComponent({
   name: 'Calendar',
@@ -106,9 +100,19 @@ export default defineComponent({
           )
         )
         if (result.length > 0) {
-          calendar.push({ date: date, schedule: result[0].schedule })
+          calendar.push({ 
+            date: date,
+            schedule: result[0].schedule,
+            year: this.calendarYear,
+            month: this.calendarMonth
+          })
         } else {
-          calendar.push({ date: date })
+          calendar.push({
+            date: date, 
+            schedule: "null",
+            year: this.calendarYear,
+            month: this.calendarMonth
+          })
         }
       }
       return calendar
@@ -157,26 +161,6 @@ export default defineComponent({
       }
       this.$nextTick(() => (this.loaded = true))
     },
-    changeSchedule(date, schedule) {
-      date.schedule = this.markToSchedule[schedule]
-      this.updateCalendar(date)
-      this.$nextTick(() => (this.fetchCalendar()))
-    },
-    updateCalendar(date) {
-      fetch(`days/${this.calendarYear}/${this.calendarMonth}`, {
-      method: 'POST',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRF-Token': this.token(),
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(date),
-      credentials: 'same-origin'
-      })
-      .catch((error) => {
-        console.warn(error)
-      })
-    },
     fetchCalendar() {
       fetch(`/api/calendars/${this.currentYear}.json`, {
       method: 'GET',
@@ -190,7 +174,6 @@ export default defineComponent({
         return response.json()
       })
       .then((json) => {
-        this.calendarDays = []
         json.forEach((r) => {
           this.calendarDays.push(r)
         })
@@ -208,8 +191,8 @@ export default defineComponent({
     }
   },
   components: {
-    Popper,
     Modal,
+    Day,
   },
 })
 </script>
