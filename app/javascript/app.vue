@@ -35,7 +35,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Popper from 'vue3-popper'
 import Modal from './components/setting_modal.vue' 
 import Day from './components/day.vue' 
 
