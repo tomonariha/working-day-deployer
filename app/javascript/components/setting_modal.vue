@@ -1,5 +1,26 @@
 <template>
   <p>モーダル</p>
+  <select v-model="selectedStartMonth">
+    <option v-for="i in 12" :key="i">
+      {{ i }}
+    </option>
+  </select>
+  <select v-model="selectedStartDay">
+    <option v-for="i in this.lastDate(this.selectedStartMonth)" :key="i">
+      {{ i }}
+    </option>
+  </select>
+  <br>
+  <select v-model="selectedEndMonth">
+    <option v-for="i in 12" :key="i">
+      {{ i }}
+    </option>
+  </select>
+  <select v-model="selectedEndDay">
+    <option v-for="i in this.lastDate(this.selectedEndMonth)" :key="i">
+      {{ i }}
+    </option>
+  </select>
   <div>日曜日の予定</div>
   <br/>
   <input type="radio" id="none" value="None" v-model="scheduleOfSunday" />
@@ -18,7 +39,7 @@
   <label for="off">休み</label>
   <br/>
   <button v-on:click="$emit('close')">閉じる</button>
-  <button>カレンダーに適用</button>
+  <button v-on:click="updateSetting()">保存</button>
 </template>
 
 <script lang="ts">
@@ -35,9 +56,47 @@ export default defineComponent({
       scheduleOfThursday: "",
       scheduleOfFriday: "",
       scheduleOfSaturday: "",
+      selectedStartMonth: "",
+      selectedStartDay: "",
+      selectedEndMonth: "",
+      selectedEndDay: "",
     }
   },
-  props: {},
+  props: {
+    year: { type: Number, required: true }
+  },
+  methods: {
+    token() {
+      const meta = document.querySelector('meta[name="csrf-token"]')
+      return meta ? meta.getAttribute('content') : ''
+    },
+    lastDate(selectedMonth) {
+      const lastDay = new Date(this.year, selectedMonth, 0)
+      return lastDay.getDate()
+    },
+    updateSetting() {
+      const schedules = {
+        start_month: this.selectedStartMonth,
+        start_day: this.selectedStartDay,
+        end_month: this.selectedEndMonth,
+        end_day: this.selectedEndDay,
+        schedule_of_sunday: this.scheduleOfSunday
+        }
+      fetch(`/settings/${this.year}`, {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': this.token(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(schedules),
+      credentials: 'same-origin'
+      })
+      .catch((error) => {
+        console.warn(error)
+      })
+    },
+  },
   emits: ['close']
 })
 </script>

@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   get 'calendars/index'
   draw :api
   post 'days/:year/:month', to: 'days#update'
+  post 'settings/:year', to: 'api/settings#create'
 end

@@ -1,8 +1,9 @@
 <template>
+  {{settings}}
   <button v-on:click="openModal()">モーダル開く</button>
     <div id=overlay  v-show="showContent">
       <div id=content>
-        <Modal v-on:close="closeModal()"></Modal>
+        <Modal v-bind:year="calendarYear" v-on:close="closeModal()"></Modal>
       </div>
     </div>
   <button class="calendar-nav__previous" @click='previousMonth'>前</button>
@@ -31,6 +32,7 @@
       </tr>
     </tbody>
   </table>
+  <button v-on:click="fetchSetting">適用</button>
 </template>
 
 <script lang="ts">
@@ -46,6 +48,7 @@ export default defineComponent({
       markToSchedule: { "●":"full-time", "▲":"morning", "△":"afternoon", "□":"off" },
       scheduleToMark: { "full-time":"●", "morning":"▲", "afternoon":"△", "off":"□" },
       calendarDays: [],
+      settings: [],
       currentYear: this.getCurrentYear(),
       currentMonth: this.getCurrentMonth(),
       calendarYear: this.getCurrentYear(),
@@ -161,7 +164,7 @@ export default defineComponent({
       this.$nextTick(() => (this.loaded = true))
     },
     fetchCalendar() {
-      fetch(`/api/calendars/${this.currentYear}.json`, {
+      fetch(`/api/calendars/${this.calendarYear}.json`, {
       method: 'GET',
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
@@ -187,7 +190,29 @@ export default defineComponent({
     },
     closeModal() {
       this.showContent = false
-    }
+    },
+    fetchSetting() {
+      fetch(`api/calendars/${this.calendarYear}/settings.json`, {
+        method: 'GET',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-Token': this.token()
+        },
+        credentials: 'same-origin'
+      })
+      .then((response) => {
+        return response.json()
+      })
+      .then((json) => {
+        json.forEach((r) => {
+          this.settings.push(r)
+        })
+        this.loaded = true
+      })
+      .catch((error) => {
+        console.warn(error)
+      })
+    },
   },
   components: {
     Modal,
