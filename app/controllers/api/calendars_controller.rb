@@ -2,6 +2,6 @@
 
 class Api::CalendarsController < ApplicationController
   def show
-    @calendars = User.find(current_user.id).calendars.find_by(year: params[:id]).days
+    @days = User.find(current_user.id).calendars.find_by(year: params[:year]).days
   end
 end

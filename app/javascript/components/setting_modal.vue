@@ -1,24 +1,24 @@
 <template>
   <p>モーダル</p>
   <select v-model="selectedStartMonth">
-    <option v-for="i in 12" :key="i">
-      {{ i }}
+    <option v-for="month in 12" :key="month">
+      {{ month }}
     </option>
   </select>
   <select v-model="selectedStartDay">
-    <option v-for="i in this.lastDate(this.selectedStartMonth)" :key="i">
-      {{ i }}
+    <option v-for="date in this.lastDate(this.selectedStartMonth)" :key="date">
+      {{ date }}
     </option>
   </select>
   <br>
   <select v-model="selectedEndMonth">
-    <option v-for="i in 12" :key="i">
-      {{ i }}
+    <option v-for="month in 12" :key="month">
+      {{ month }}
     </option>
   </select>
   <select v-model="selectedEndDay">
-    <option v-for="i in this.lastDate(this.selectedEndMonth)" :key="i">
-      {{ i }}
+    <option v-for="date in this.lastDate(this.selectedEndMonth)" :key="date">
+      {{ date }}
     </option>
   </select>
   <div>日曜日の予定</div>
