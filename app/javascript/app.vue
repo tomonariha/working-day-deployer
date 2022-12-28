@@ -1,5 +1,5 @@
 <template>
-  {{settings}}
+  {{adjastedCalendar}}
   <button v-on:click="openModal()">モーダル開く</button>
     <div id=overlay  v-show="showContent">
       <div id=content>
@@ -32,7 +32,7 @@
       </tr>
     </tbody>
   </table>
-  <button v-on:click="fetchSetting">適用</button>
+  <button v-on:click="autoAdjast">適用</button>
 </template>
 
 <script lang="ts">
@@ -56,6 +56,7 @@ export default defineComponent({
       today: this.getCurrentDay(),
       loaded: null,
       showContent: false,
+      adjastedCalendar: [],
     }
   },
   props: {
@@ -111,7 +112,7 @@ export default defineComponent({
         } else {
           calendar.push({
             date: date, 
-            schedule: "null",
+            schedule: null,
             year: this.calendarYear,
             month: this.calendarMonth
           })
@@ -122,6 +123,7 @@ export default defineComponent({
   },
   mounted() {
     this.fetchCalendar()
+    this.fetchSettings()
   },
   methods: {
     token() {
@@ -191,7 +193,33 @@ export default defineComponent({
     closeModal() {
       this.showContent = false
     },
-    fetchSetting() {
+    autoAdjast() {
+      const setting = this.settings[0]
+      const startDate = new Date(setting.period_start_at)
+      const endDate = new Date(setting.period_end_at)
+      const availableDays = new Array()
+      for (let day = startDate; day <= endDate; day.setDate(day.getDate()+1)) {
+        const formatedDate = day.getFullYear() + "-" + (day.getMonth()+1) + "-" + day.getDate()
+        availableDays.push(formatedDate)
+      }
+      availableDays.forEach(d=> {
+        const day = new Date(d)
+        if (setting.schedule_of_sunday) {
+          this.insertSchedule(day, setting.schedule_of_sunday)
+        } 
+      })
+    },
+    insertSchedule(day , schedule) {
+      if (day.getDay() === 0) {
+        this.adjastedCalendar.push({
+          date: day.getDate(),
+          schedule: schedule,
+          year: day.getFullYear(),
+          month: day.getMonth()+1,
+        })
+      } 
+    },
+    fetchSettings() {
       fetch(`api/calendars/${this.calendarYear}/settings.json`, {
         method: 'GET',
         headers: {
