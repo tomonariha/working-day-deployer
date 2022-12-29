@@ -1,9 +1,8 @@
 <template>
-  {{adjastedCalendar}}
   <button v-on:click="openModal()">モーダル開く</button>
     <div id=overlay  v-show="showContent">
       <div id=content>
-        <Modal v-bind:year="calendarYear" v-on:close="closeModal()"></Modal>
+        <Modal v-bind:year="calendarYear" v-bind:settings="settings" v-on:close="closeModal()"></Modal>
       </div>
     </div>
   <button class="calendar-nav__previous" @click='previousMonth'>前</button>
@@ -208,14 +207,14 @@ export default defineComponent({
           this.insertSchedule(day, setting.schedule_of_sunday)
         } 
       })
+      this.reflectAdjastedCalendar()
     },
     insertSchedule(day , schedule) {
       if (day.getDay() === 0) {
+        const formatedDate = day.getFullYear() + "-" + this.formatMonth(day.getMonth()+1) + "-" + this.formatDay(day.getDate())
         this.adjastedCalendar.push({
-          date: day.getDate(),
+          date: formatedDate,
           schedule: schedule,
-          year: day.getFullYear(),
-          month: day.getMonth()+1,
         })
       } 
     },
@@ -240,6 +239,15 @@ export default defineComponent({
       .catch((error) => {
         console.warn(error)
       })
+    },
+    reflectAdjastedCalendar() {
+      for(let d of this.adjastedCalendar) {
+        for(let day of this.calendarDays) {
+          if (day.date === d.date) {
+            this.calendarDays.splice(this.calendarDays.indexOf(day), 1, d)
+          }
+        }
+      }
     },
   },
   components: {

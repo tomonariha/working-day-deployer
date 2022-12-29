@@ -1,5 +1,10 @@
 <template>
   <p>モーダル</p>
+  <div v-for="setting in settings" :key="setting.id">
+    <button v-on:click="reflectSetting(setting)">{{ setting.period_start_at }} 〜 {{ setting.period_end_at }}</button>
+  </div>
+  <button>new</button>
+  <br>
   <select v-model="selectedStartMonth">
     <option v-for="month in 12" :key="month">
       {{ month }}
@@ -60,10 +65,12 @@ export default defineComponent({
       selectedStartDay: "",
       selectedEndMonth: "",
       selectedEndDay: "",
+      settingId: "",
     }
   },
   props: {
-    year: { type: Number, required: true }
+    year: { type: Number, reqired: true }, 
+    settings: { type: Object, required: true }
   },
   methods: {
     token() {
@@ -96,7 +103,17 @@ export default defineComponent({
         console.warn(error)
       })
     },
+    reflectSetting(setting) {
+      const startDay = new Date(setting.period_start_at)
+      const endDay = new Date(setting.period_end_at)
+      this.scheduleOfSunday = setting.schedule_of_sunday,
+      this.selectedStartMonth = (startDay.getMonth() + 1),
+      this.selectedStartDay = startDay.getDate(),
+      this.selectedEndMonth = (endDay.getMonth() + 1),
+      this.selectedEndDay = endDay.getDate(),
+      this.settingId = setting.id
+    },
   },
-  emits: ['close']
+  emits: ['close'],
 })
 </script>
