@@ -12,7 +12,7 @@ class Api::SettingsController < ApplicationController
     @calendar = User.find(current_user.id).calendars.find_by(year: params[:year])
     start_at = Date.new(params[:year].to_i, params[:start_month].to_i, params[:start_day].to_i)
     end_at = Date.new(params[:year].to_i, params[:end_month].to_i, params[:end_day].to_i)
-    @setting = Setting.new(calendar_id: @calendar.id, schedule_of_sunday: params[:schedule_of_sunday])
+    @setting = Setting.new(calendar_id: @calendar.id, schedule_of_sunday: params[:schedule_of_sunday], total_working_days: params[:total_working_days])
     @setting.save!
   end
 end

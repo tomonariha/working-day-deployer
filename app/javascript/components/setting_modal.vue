@@ -26,6 +26,8 @@
       {{ date }}
     </option>
   </select>
+  <div>この期間の勤務日数:{{ totalWorkingDays }}</div>
+  <input type="number" v-model="totalWorkingDays"/>
   <div>日曜日の予定</div>
   <br/>
   <input type="radio" id="none" value="None" v-model="scheduleOfSunday" />
@@ -66,6 +68,7 @@ export default defineComponent({
       selectedEndMonth: "",
       selectedEndDay: "",
       settingId: "",
+      totalWorkingDays: null,
     }
   },
   props: {
@@ -87,6 +90,7 @@ export default defineComponent({
         start_day: this.selectedStartDay,
         end_month: this.selectedEndMonth,
         end_day: this.selectedEndDay,
+        total_working_days: this.totalWorkingDays,
         schedule_of_sunday: this.scheduleOfSunday
         }
       fetch(`/settings/${this.year}`, {
@@ -106,6 +110,7 @@ export default defineComponent({
     reflectSetting(setting) {
       const startDay = new Date(setting.period_start_at)
       const endDay = new Date(setting.period_end_at)
+      this.totalWorkingDays = setting.total_working_days
       this.scheduleOfSunday = setting.schedule_of_sunday,
       this.selectedStartMonth = (startDay.getMonth() + 1),
       this.selectedStartDay = startDay.getDate(),
