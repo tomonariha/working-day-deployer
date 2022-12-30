@@ -7,7 +7,7 @@
     </div>
   <button class="calendar-nav__previous" @click='previousMonth'>前</button>
   <button class="calendar-nav__next" @click='nextMonth'>後</button>
-  <div class="calendar-nav__year--month">{{ calendarYear }}年{{ calendarMonth }}月</div>
+  <div class="calendar-nav__year--month">{{ calendarYear }}年{{ calendarMonth }}月 total:{{totalWorkingDays}}</div>
   <table class="calendar">
     <thead class="calendar__header">
       <tr>
@@ -56,6 +56,7 @@ export default defineComponent({
       loaded: null,
       showContent: false,
       adjastedCalendar: [],
+      totalWorkingDays: 0,
     }
   },
   props: {
@@ -90,6 +91,7 @@ export default defineComponent({
     },
     calendarDates() {
       const calendar = []
+      this.totalWorkingDays = 0
       if (this.firstWday > 0) {
         for (let blank = 0; blank < this.firstWday; blank++) {
           calendar.push(null)
@@ -108,6 +110,7 @@ export default defineComponent({
             year: this.calendarYear,
             month: this.calendarMonth
           })
+          this.countWorkingDays(result[0].schedule)
         } else {
           calendar.push({
             date: date, 
@@ -241,12 +244,19 @@ export default defineComponent({
       })
     },
     reflectAdjastedCalendar() {
-      for(let d of this.adjastedCalendar) {
-        for(let day of this.calendarDays) {
+      for (let d of this.adjastedCalendar) {
+        for (let day of this.calendarDays) {
           if (day.date === d.date) {
             this.calendarDays.splice(this.calendarDays.indexOf(day), 1, d)
           }
         }
+      }
+    },
+    countWorkingDays(schedule) {
+      if (schedule === 'full-time') {
+        this.totalWorkingDays++
+      } else if ((schedule === 'morning') || (schedule === 'afternoon')) {
+        this.totalWorkingDays += 0.5
       }
     },
   },
