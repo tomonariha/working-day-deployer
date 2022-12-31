@@ -4,7 +4,7 @@
     <button v-on:click="reflectSetting(setting)">{{ setting.period_start_at }} 〜 {{ setting.period_end_at }}</button>
     <button v-on:click="deleteSetting(setting.id)">この条件を削除</button>
   </div>
-  <button>new</button>
+  <button v-on:click="resetSettingParams()">new</button>
   <br>
   <select v-model="selectedStartMonth">
     <option v-for="month in 12" :key="month">
@@ -155,6 +155,21 @@ export default defineComponent({
       .catch((error) => {
         console.warn(error)
       })
+    },
+    resetSettingParams() {
+      this.scheduleOfSunday = "",
+      this.scheduleOfMonday = "",
+      this.scheduleOfTuesday = "",
+      this.scheduleOfWednesday = "",
+      this.scheduleOfThursday = "",
+      this.scheduleOfFriday = "",
+      this.scheduleOfSaturday = "",
+      this.selectedStartMonth = "",
+      this.selectedStartDay = "",
+      this.selectedEndMonth = "",
+      this.selectedEndDay = "",
+      this.settingId = "",
+      this.totalWorkingDays = null
     },
   },
   emits: ['close'],
