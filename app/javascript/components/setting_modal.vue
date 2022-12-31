@@ -47,7 +47,8 @@
   <label for="off">休み</label>
   <br/>
   <button v-on:click="$emit('close')">閉じる</button>
-  <button v-on:click="updateSetting()">保存</button>
+  <button v-if="this.settingId" v-on:click="updateSetting(this.settingId)">変更</button>
+  <button v-else v-on:click="createSetting()">新規作成</button>
 </template>
 
 <script lang="ts">
@@ -85,17 +86,17 @@ export default defineComponent({
       const lastDay = new Date(this.year, selectedMonth, 0)
       return lastDay.getDate()
     },
-    updateSetting() {
+    updateSetting(settingId) {
+      const start_at = new Date(this.year, (this.selectedStartMonth - 1), this.selectedStartDay)
+      const end_at = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
       const schedules = {
-        start_month: this.selectedStartMonth,
-        start_day: this.selectedStartDay,
-        end_month: this.selectedEndMonth,
-        end_day: this.selectedEndDay,
+        period_start_at: start_at.toDateString(),
+        period_end_at: end_at.toDateString(),
         total_working_days: this.totalWorkingDays,
         schedule_of_sunday: this.scheduleOfSunday
-        }
-      fetch(`api/calendars/${this.year}/settings`, {
-      method: 'POST',
+      }
+      fetch(`api/calendars/${this.year}/settings/${settingId}`, {
+      method: 'PUT',
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'X-CSRF-Token': this.token(),
@@ -126,6 +127,29 @@ export default defineComponent({
         'X-Requested-With': 'XMLHttpRequest',
         'X-CSRF-Token': this.token(),
       },
+      credentials: 'same-origin'
+      })
+      .catch((error) => {
+        console.warn(error)
+      })
+    },
+    createSetting() {
+      const start_at = new Date(this.year, (this.selectedStartMonth - 1), this.selectedStartDay)
+      const end_at = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
+      const schedules = {
+        period_start_at: start_at.toDateString(),
+        period_end_at: end_at.toDateString(),
+        total_working_days: this.totalWorkingDays,
+        schedule_of_sunday: this.scheduleOfSunday
+      }
+      fetch(`api/calendars/${this.year}/settings`, {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': this.token(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(schedules),
       credentials: 'same-origin'
       })
       .catch((error) => {
