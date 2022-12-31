@@ -2,6 +2,7 @@
   <p>モーダル</p>
   <div v-for="setting in settings" :key="setting.id">
     <button v-on:click="reflectSetting(setting)">{{ setting.period_start_at }} 〜 {{ setting.period_end_at }}</button>
+    <button v-on:click="deleteSetting(setting.id)">この条件を削除</button>
   </div>
   <button>new</button>
   <br>
@@ -93,7 +94,7 @@ export default defineComponent({
         total_working_days: this.totalWorkingDays,
         schedule_of_sunday: this.scheduleOfSunday
         }
-      fetch(`/settings/${this.year}`, {
+      fetch(`api/calendars/${this.year}/settings`, {
       method: 'POST',
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
@@ -117,6 +118,19 @@ export default defineComponent({
       this.selectedEndMonth = (endDay.getMonth() + 1),
       this.selectedEndDay = endDay.getDate(),
       this.settingId = setting.id
+    },
+    deleteSetting(settingId) {
+      fetch(`api/calendars/${this.year}/settings/${settingId}`, {
+      method: 'DELETE',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': this.token(),
+      },
+      credentials: 'same-origin'
+      })
+      .catch((error) => {
+        console.warn(error)
+      })
     },
   },
   emits: ['close'],
