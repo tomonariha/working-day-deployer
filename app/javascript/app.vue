@@ -124,11 +124,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    const fetchCalendarAndSetting = async () => {
-      await this.fetchCalendar()
-      await this.fetchSettings()
-    }
-    fetchCalendarAndSetting()
+    this.fetchCalendarAndSettings()
   },
   methods: {
     token() {
@@ -155,6 +151,7 @@ export default defineComponent({
       if (this.calendarMonth === 1) {
         this.calendarMonth = 12
         this.calendarYear--
+        this.fetchCalendarAndSettings()
       } else {
         this.calendarMonth--
       }
@@ -165,6 +162,7 @@ export default defineComponent({
       if (this.calendarMonth === 12) {
         this.calendarMonth = 1
         this.calendarYear++
+        this.fetchCalendarAndSettings()
       } else {
         this.calendarMonth++
       }
@@ -203,6 +201,7 @@ export default defineComponent({
       const startDate = new Date(setting.period_start_at)
       const endDate = new Date(setting.period_end_at)
       const availableDays = new Array()
+      this.adjastedCalendar = []
       if (setting.total_working_days) {
         const daysRequired = setting.total_working_days
       }
@@ -250,12 +249,15 @@ export default defineComponent({
       })
     },
     reflectAdjastedCalendar() {
+      searchAdjastedDay:
       for (let d of this.adjastedCalendar) {
         for (let day of this.calendarDays) {
           if (day.date === d.date) {
             this.calendarDays.splice(this.calendarDays.indexOf(day), 1, d)
+            continue searchAdjastedDay
           }
         }
+        this.calendarDays.push(d)
       }
     },
     countWorkingDays(schedule) {
@@ -264,6 +266,14 @@ export default defineComponent({
       } else if ((schedule === 'morning') || (schedule === 'afternoon')) {
         this.totalWorkingDays += 0.5
       }
+    },
+    fetchCalendarAndSettings() {
+      this.calendarDays = [],
+      this.settings = [],
+      (async () => {
+        await this.fetchCalendar()
+        await this.fetchSettings()
+      })()
     },
   },
   components: {
