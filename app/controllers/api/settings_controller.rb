@@ -21,8 +21,7 @@ class Api::SettingsController < ApplicationController
   end
 
   def update
-    @setting = Setting.find(params[:id])
-    @setting.update!(setting_params)
+    Setting.find(params[:id]).update!(setting_params)
   end
 
   def destroy

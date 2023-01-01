@@ -124,8 +124,11 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.fetchCalendar()
-    this.fetchSettings()
+    const fetchCalendarAndSetting = async () => {
+      await this.fetchCalendar()
+      await this.fetchSettings()
+    }
+    fetchCalendarAndSetting()
   },
   methods: {
     token() {
@@ -200,6 +203,9 @@ export default defineComponent({
       const startDate = new Date(setting.period_start_at)
       const endDate = new Date(setting.period_end_at)
       const availableDays = new Array()
+      if (setting.total_working_days) {
+        const daysRequired = setting.total_working_days
+      }
       for (let day = startDate; day <= endDate; day.setDate(day.getDate()+1)) {
         const formatedDate = day.getFullYear() + "-" + (day.getMonth()+1) + "-" + day.getDate()
         availableDays.push(formatedDate)
