@@ -197,24 +197,25 @@ export default defineComponent({
       this.showContent = false
     },
     autoAdjast() {
-      const setting = this.settings[0]
-      const startDate = new Date(setting.period_start_at)
-      const endDate = new Date(setting.period_end_at)
-      const availableDays = new Array()
       this.adjastedCalendar = []
-      if (setting.total_working_days) {
-        const daysRequired = setting.total_working_days
+      for (let setting of this.settings) {
+        const startDate = new Date(setting.period_start_at)
+        const endDate = new Date(setting.period_end_at)
+        const availableDays = new Array()
+        if (setting.total_working_days) {
+          const daysrequired = setting.total_working_days
+        }
+        for (let day = startDate; day <= endDate; day.setDate(day.getDate()+1)) {
+          const formatedDate = day.getFullYear() + "-" + (day.getMonth()+1) + "-" + day.getDate()
+          availableDays.push(formatedDate)
+        }
+        availableDays.forEach(d=> {
+          const day = new Date(d)
+          if (setting.schedule_of_sunday) {
+            this.insertSchedule(day, setting.schedule_of_sunday)
+          } 
+        })
       }
-      for (let day = startDate; day <= endDate; day.setDate(day.getDate()+1)) {
-        const formatedDate = day.getFullYear() + "-" + (day.getMonth()+1) + "-" + day.getDate()
-        availableDays.push(formatedDate)
-      }
-      availableDays.forEach(d=> {
-        const day = new Date(d)
-        if (setting.schedule_of_sunday) {
-          this.insertSchedule(day, setting.schedule_of_sunday)
-        } 
-      })
       this.reflectAdjastedCalendar()
     },
     insertSchedule(day , schedule) {
