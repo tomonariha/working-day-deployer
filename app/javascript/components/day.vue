@@ -17,8 +17,8 @@ export default defineComponent({
   data() {
     return {
       schedule: "",
-      scheduleMarks: ["●","▲","△","□"],
-      markToSchedule: { "●":"full-time", "▲":"morning", "△":"afternoon", "□":"off" },
+      scheduleMarks: ["●" , "▲" , "△" , "□", "指定なし"],
+      markToSchedule: { "●":"full-time", "▲":"morning", "△":"afternoon", "□":"off" , "指定なし":"" },
       scheduleToMark: { "full-time":"●", "morning":"▲", "afternoon":"△", "off":"□" },
     }
   },
@@ -37,8 +37,25 @@ export default defineComponent({
       return this.scheduleToMark[this.schedule]
     },
     changeSchedule(scheduleMark) {
+      if (scheduleMark === "指定なし") {
+        this.deleteDate()
+      } else {
+        this.updateCalendar(this.schedule)
+      }
       this.schedule = this.markToSchedule[scheduleMark]
-      this.updateCalendar(this.schedule)
+    },
+    deleteDate() {
+      fetch(`days/${this.date.year}/${this.date.month}/${this.date.date}`, {
+      method: 'DELETE',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': this.token(),
+      },
+      credentials: 'same-origin'
+      })
+      .catch((error) => {
+        console.warn(error)
+      })
     },
     updateCalendar(state) {
       const dateState = {date:this.date.date, schedule:state}
