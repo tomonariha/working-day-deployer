@@ -27,8 +27,11 @@
       {{ date }}
     </option>
   </select>
-  <div>この期間の勤務日数:{{ totalWorkingDays }}</div>
-  <input type="number" v-model="totalWorkingDays"/>
+  <div>この期間の勤務日数:
+      <input type="number" v-show="specifiedTotalDays" v-model="totalWorkingDays"/>
+  </div>
+  <label for="checkSpecifiedTotalDays">指定しない</label>
+  <input type="checkbox" id="checkSpecifiedTotalDays" v-model="notSpecifiedTotalDays" />
   <div>日曜日の予定</div>
   <br/>
   <input type="radio" id="none" value="None" v-model="scheduleOfSunday" />
@@ -70,12 +73,18 @@ export default defineComponent({
       selectedEndMonth: "",
       selectedEndDay: "",
       settingId: "",
-      totalWorkingDays: null,
+      totalWorkingDays: 0,
+      notSpecifiedTotalDays: true,
     }
   },
   props: {
     year: { type: Number, reqired: true }, 
     settings: { type: Object, required: true }
+  },
+  computed: {
+    specifiedTotalDays() {
+      return !this.notSpecifiedTotalDays
+    },
   },
   methods: {
     token() {
@@ -92,7 +101,7 @@ export default defineComponent({
       const schedules = {
         period_start_at: start_at.toDateString(),
         period_end_at: end_at.toDateString(),
-        total_working_days: this.totalWorkingDays,
+        total_working_days: this.setTotalWorkingDays(),
         schedule_of_sunday: this.scheduleOfSunday
       }
       fetch(`api/calendars/${this.year}/settings/${settingId}`, {
@@ -119,6 +128,11 @@ export default defineComponent({
       this.selectedEndMonth = (endDay.getMonth() + 1),
       this.selectedEndDay = endDay.getDate(),
       this.settingId = setting.id
+      if (setting.total_working_days) {
+        this.notSpecifiedTotalDays = false
+      } else {
+        this.notSpecifiedTotalDays = true
+      }
     },
     deleteSetting(settingId) {
       fetch(`api/calendars/${this.year}/settings/${settingId}`, {
@@ -139,7 +153,7 @@ export default defineComponent({
       const schedules = {
         period_start_at: start_at.toDateString(),
         period_end_at: end_at.toDateString(),
-        total_working_days: this.totalWorkingDays,
+        total_working_days: this.setTotalWorkingDays(),
         schedule_of_sunday: this.scheduleOfSunday
       }
       fetch(`api/calendars/${this.year}/settings`, {
@@ -169,8 +183,13 @@ export default defineComponent({
       this.selectedEndMonth = "",
       this.selectedEndDay = "",
       this.settingId = "",
-      this.totalWorkingDays = null
+      this.totalWorkingDays = 0,
+      this.notSpecifiedtotalDays = true
     },
+    setTotalWorkingDays() {
+      if (this.notSpecifiedTotalDays) { return null } 
+      return this.totalWorkingDays
+    }
   },
   emits: ['close'],
 })
