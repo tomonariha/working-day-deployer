@@ -40,7 +40,7 @@ export default defineComponent({
       if (scheduleMark === "指定なし") {
         this.deleteDate()
       } else {
-        this.updateCalendar(this.schedule)
+        this.updateCalendar(scheduleMark)
       }
       this.schedule = this.markToSchedule[scheduleMark]
     },
@@ -57,8 +57,8 @@ export default defineComponent({
         console.warn(error)
       })
     },
-    updateCalendar(state) {
-      const dateState = {date:this.date.date, schedule:state}
+    updateCalendar(schedule) {
+      const dateState = {date: this.date.date, schedule: this.markToSchedule[schedule]}
       fetch(`days/${this.date.year}/${this.date.month}`, {
       method: 'POST',
       headers: {

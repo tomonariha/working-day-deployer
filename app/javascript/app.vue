@@ -1,5 +1,5 @@
 <template>
-  <button v-on:click="openModal()">モーダル開く</button>
+  <button v-on:click="openModal()">条件の入力</button>
     <div id=overlay  v-show="showContent">
       <div id=content>
         <Modal v-bind:year="calendarYear" v-bind:settings="settings" v-on:close="closeModal()"></Modal>
@@ -201,28 +201,58 @@ export default defineComponent({
       for (let setting of this.settings) {
         const startDate = new Date(setting.period_start_at)
         const endDate = new Date(setting.period_end_at)
-        const availableDays = new Array()
+        let availableDays = new Array()
+        const workingDaysRequired = setting.total_working_days
+        let numberOfWorkingDays = 0
+        const schedulesOfWeek = { 
+          0: setting.schedule_of_sunday,
+          1: setting.schedule_of_monday,
+          2: setting.schedule_of_tuesday,
+          3: setting.schedule_of_wednesday,
+          4: setting.schedule_of_thursday,
+          5: setting.schedule_of_friday,
+          6: setting.schedule_of_saturday,
+        }
         for (let day = startDate; day <= endDate; day.setDate(day.getDate()+1)) {
           const formatedDate = day.getFullYear() + "-" + (day.getMonth()+1) + "-" + day.getDate()
           availableDays.push(formatedDate)
         }
-        availableDays.forEach(d=> {
-          const day = new Date(d)
-          if (setting.schedule_of_sunday) {
-            this.insertSchedule(day, setting.schedule_of_sunday)
-          } 
+        this.extractCalendarDaysWithinPeriod(startDate, endDate).forEach(day=> {
+          const date = new Date(day.date)
+          availableDays.forEach(availableDay=> {
+            const availableDate = new Date(availableDay)
+            if (this.equalDays(availableDate, date)) {
+              if (day.schedule === 'full-time') {
+                numberOfWorkingDays++
+              } else if ((day.schedule === 'morning') || (day.schedule === 'afternoon')) {
+                numberOfWorkingDays+=0.5
+              }
+              availableDays.splice(availableDays.indexOf(availableDay), 1)
+            }
+          })
         })
+        for (let availableDay of availableDays) {
+          if (numberOfWorkingDays >= workingDaysRequired) {
+            break
+          }
+          const day = new Date(availableDay)
+          const schedule = schedulesOfWeek[day.getDay()]
+          this.insertSchedule(day, schedule)
+          if (schedule === 'full-time') {
+            numberOfWorkingDays++
+          } else if ((schedule === 'morning') || (schedule === 'afternoon')) {
+            numberOfWorkingDays+=0.5
+          }
+        }
       }
       this.reflectAdjastedCalendar()
     },
-    insertSchedule(day ,schedule) {
-      if (day.getDay() === 0) {
-        const formatedDate = day.getFullYear() + "-" + this.formatMonth(day.getMonth()+1) + "-" + this.formatDay(day.getDate())
-        this.adjastedCalendar.push({
-          date: formatedDate,
-          schedule: schedule,
-        })
-      } 
+    insertSchedule(day, schedule) {
+      const formatedDate = day.getFullYear() + "-" + this.formatMonth(day.getMonth()+1) + "-" + this.formatDay(day.getDate())
+      this.adjastedCalendar.push({
+        date: formatedDate,
+        schedule: schedule,
+      })
     },
     fetchSettings() {
       fetch(`api/calendars/${this.calendarYear}/settings.json`, {
@@ -273,6 +303,31 @@ export default defineComponent({
         await this.fetchSettings()
       })()
     },
+    extractCalendarDaysWithinPeriod(startDate, endDate) {
+      const calendar = new Array()
+      for (let day of this.calendarDays) {
+        const date = new Date(day) 
+        if (date.getMonth() < startDate.getMonth()) {
+          continue
+        }
+        if (date.getMonth() > endDate.getMonth()) {
+          continue
+        }
+        if (date.getDate() < startDate.getDate()) {
+          continue
+        }
+        if (date.getDate() > endDate.getDate()) {
+          continue
+        }
+        calendar.push(day)
+      }
+      return calendar
+    },
+    equalDays(availableDate, date) {
+      if (availableDate.getMonth() !== date.getMonth()) { return false }
+      if (availableDate.getDate() !== date.getDate()) { return false }
+      return true
+    }
   },
   components: {
     Modal,

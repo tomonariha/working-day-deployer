@@ -10,13 +10,7 @@ class Api::SettingsController < ApplicationController
 
   def create
     @calendar = User.find(current_user.id).calendars.find_by(year: params[:calendar_year])
-    @setting = Setting.new(
-      calendar_id: @calendar.id,
-      schedule_of_sunday: params[:schedule_of_sunday],
-      total_working_days: params[:total_working_days],
-      period_start_at: params[:period_start_at],
-      period_end_at: params[:period_end_at]
-    )
+    @setting = Setting.new(setting_params.merge(calendar_id: @calendar.id))
     @setting.save!
   end
 
@@ -34,6 +28,12 @@ class Api::SettingsController < ApplicationController
     params.require(:setting).permit(
       :calendar_id,
       :schedule_of_sunday,
+      :schedule_of_monday,
+      :schedule_of_tuesday,
+      :schedule_of_wednesday,
+      :schedule_of_thursday,
+      :schedule_of_friday,
+      :schedule_of_saturday,
       :total_working_days,
       :period_start_at,
       :period_end_at,
