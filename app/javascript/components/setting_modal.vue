@@ -231,12 +231,16 @@ export default defineComponent({
       return this.totalWorkingDays
     },
     previousWeekday() {
-      if (this.weekdayNumber > 0) {
+      if (this.weekdayNumber === 0) {
+        this.weekdayNumber = 6
+      } else {
         this.weekdayNumber--
       }
     },
     nextWeekday() {
-      if (this.weekdayNumber < 6) {
+      if (this.weekdayNumber === 6) {
+        this.weekdayNumber = 0
+      } else {
         this.weekdayNumber++
       }
     }
