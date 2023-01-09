@@ -31,7 +31,9 @@
       </tr>
     </tbody>
   </table>
-  <button v-on:click="autoAdjast">適用</button>
+  <button v-show="unAutoAdjusted" v-on:click="autoAdjust">適用</button>
+  <button v-show="autoAdjusted" v-on:click="determineAutoAdjust">確定</button>
+  <button v-show="autoAdjusted" v-on:click="cancelAutoAdjust">キャンセル</button>
 </template>
 
 <script lang="ts">
@@ -57,6 +59,7 @@ export default defineComponent({
       showContent: false,
       adjastedCalendar: [],
       totalWorkingDays: 0,
+      autoAdjusted: false,
     }
   },
   props: {
@@ -122,6 +125,9 @@ export default defineComponent({
       }
       return calendar
     },
+    unAutoAdjusted() {
+      return !this.autoAdjusted
+    }
   },
   mounted() {
     this.fetchCalendarAndSettings()
@@ -152,6 +158,7 @@ export default defineComponent({
         this.calendarMonth = 12
         this.calendarYear--
         this.fetchCalendarAndSettings()
+        this.cancelAutoAdjust()
       } else {
         this.calendarMonth--
       }
@@ -163,12 +170,14 @@ export default defineComponent({
         this.calendarMonth = 1
         this.calendarYear++
         this.fetchCalendarAndSettings()
+        this.cancelAutoAdjust()
       } else {
         this.calendarMonth++
       }
       this.$nextTick(() => (this.loaded = true))
     },
     fetchCalendar() {
+      this.calendarDays = []
       fetch(`/api/calendars/${this.calendarYear}.json`, {
       method: 'GET',
       headers: {
@@ -196,8 +205,8 @@ export default defineComponent({
     closeModal() {
       this.showContent = false
     },
-    autoAdjast() {
-      this.adjastedCalendar = []
+    autoAdjust() {
+      this.adjustedCalendar = []
       for (let setting of this.settings) {
         const startDate = new Date(setting.period_start_at)
         const endDate = new Date(setting.period_end_at)
@@ -237,6 +246,7 @@ export default defineComponent({
           }
           const day = new Date(availableDay)
           const schedule = schedulesOfWeek[day.getDay()]
+          if (schedule === "None") { continue }
           this.insertSchedule(day, schedule)
           if (schedule === 'full-time') {
             numberOfWorkingDays++
@@ -245,11 +255,12 @@ export default defineComponent({
           }
         }
       }
-      this.reflectAdjastedCalendar()
+      this.reflectAdjustedCalendar()
+      this.autoAdjusted = true
     },
     insertSchedule(day, schedule) {
       const formatedDate = day.getFullYear() + "-" + this.formatMonth(day.getMonth()+1) + "-" + this.formatDay(day.getDate())
-      this.adjastedCalendar.push({
+      this.adjustedCalendar.push({
         date: formatedDate,
         schedule: schedule,
       })
@@ -276,13 +287,13 @@ export default defineComponent({
         console.warn(error)
       })
     },
-    reflectAdjastedCalendar() {
-      searchAdjastedDay:
-      for (let d of this.adjastedCalendar) {
+    reflectAdjustedCalendar() {
+      searchAdjustedDay:
+      for (let d of this.adjustedCalendar) {
         for (let day of this.calendarDays) {
           if (day.date === d.date) {
             this.calendarDays.splice(this.calendarDays.indexOf(day), 1, d)
-            continue searchAdjastedDay
+            continue searchAdjustedDay
           }
         }
         this.calendarDays.push(d)
@@ -327,6 +338,30 @@ export default defineComponent({
       if (availableDate.getMonth() !== date.getMonth()) { return false }
       if (availableDate.getDate() !== date.getDate()) { return false }
       return true
+    },
+    determineAutoAdjust() {
+      this.saveAdjustedCalendar()
+      this.autoAdjusted = false
+    },
+    cancelAutoAdjust() {
+      this.adjustedCalendar = []
+      this.fetchCalendar()
+      this.autoAdjusted = false
+    },
+    saveAdjustedCalendar() {
+      fetch(`api/calendars/${this.calendarYear}`, {
+      method: 'PUT',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': this.token(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "calendar": this.adjustedCalendar }),
+      credentials: 'same-origin'
+      })
+      .catch((error) => {
+        console.warn(error)
+      })
     }
   },
   components: {
