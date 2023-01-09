@@ -54,6 +54,12 @@
   <button v-on:click="$emit('close')">閉じる</button>
   <button v-if="this.settingId" v-on:click="updateSetting(this.settingId)">変更</button>
   <button v-else v-on:click="createSetting()">新規作成</button>
+  <p v-if="errors.length">
+    <b>Please correct the following error(s):</b>
+    <ul>
+      <li v-for="error in errors" :key="error.id">{{ error }}</li>
+    </ul>
+  </p>
 </template>
 
 <script lang="ts">
@@ -95,7 +101,8 @@ export default defineComponent({
         4: "木",
         5: "金",
         6: "土",
-      }
+      },
+      errors: [],
     }
   },
   props: {
@@ -117,11 +124,14 @@ export default defineComponent({
       return lastDay.getDate()
     },
     updateSetting(settingId) {
-      const start_at = new Date(this.year, (this.selectedStartMonth - 1), this.selectedStartDay)
-      const end_at = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
+      const startDay = new Date(this.year, (this.selectedStartMonth - 1), this.selectedStartDay)
+      const endDay = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
+      if(this.periodValidation(startDay, endDay)) { 
+        return
+      }
       const schedules = {
-        period_start_at: start_at.toDateString(),
-        period_end_at: end_at.toDateString(),
+        period_start_at: startDay.toDateString(),
+        period_end_at: endDay.toDateString(),
         total_working_days: this.setTotalWorkingDays(),
         schedule_of_sunday: this.scheduleOfSunday,
         schedule_of_monday: this.scheduleOfMonday,
@@ -148,6 +158,9 @@ export default defineComponent({
     reflectSetting(setting) {
       const startDay = new Date(setting.period_start_at)
       const endDay = new Date(setting.period_end_at)
+      if(this.periodValidation(startDay, endDay)) { 
+        return
+      }
       this.totalWorkingDays = setting.total_working_days
       this.scheduleOfSunday = setting.schedule_of_sunday
       this.scheduleOfMonday = setting.schedule_of_monday
@@ -182,11 +195,14 @@ export default defineComponent({
       })
     },
     createSetting() {
-      const start_at = new Date(this.year, (this.selectedStartMonth - 1), this.selectedStartDay)
-      const end_at = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
+      const startDay = new Date(this.year, (this.selectedStartMonth - 1), this.selectedStartDay)
+      const endDay = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
+      if (this.periodValidation(startDay, endDay)) { 
+        return
+      }
       const schedules = {
-        period_start_at: start_at.toDateString(),
-        period_end_at: end_at.toDateString(),
+        period_start_at: startDay.toDateString(),
+        period_end_at: endDay.toDateString(),
         total_working_days: this.setTotalWorkingDays(),
         schedule_of_sunday: this.scheduleOfSunday,
         schedule_of_monday: this.scheduleOfMonday,
@@ -243,7 +259,30 @@ export default defineComponent({
       } else {
         this.weekdayNumber++
       }
-    }
+    },
+    periodValidation(startDay, endDay) {
+      this.errors = []
+      let invalid = false
+      if (!this.selectedStartMonth || !this.selectedStartDay || !this.selectedEndMonth || !this.selectedEndDay) {
+        this.errors.push("開始日と終了日を入力してください。")
+        return true
+      }
+      if (startDay > endDay) {
+        this.errors.push("開始日が終了日以前になるようにしてください。")
+        return true
+      }
+      for (let setting of this.settings) {
+        const settingStartAt = new Date(setting.period_start_at)
+        const settingEndAt = new Date(setting.period_end_at)
+        if (((startDay <= settingStartAt) && (endDay >= settingStartAt)) ||
+          ((startDay <= settingEndAt) && (endDay >= settingEndAt))) {
+          this.errors.push("他の条件の期間と重ならないようにしてください。")
+          invalid = true
+          break
+        }
+      }
+      if (invalid) { return true }
+    },
   },
   emits: ['close'],
 })
