@@ -126,9 +126,8 @@ export default defineComponent({
     updateSetting(settingId) {
       const startDay = new Date(this.year, (this.selectedStartMonth - 1), this.selectedStartDay)
       const endDay = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
-      if(this.periodValidation(startDay, endDay)) { 
-        return
-      }
+      if (this.totalDaysValidation(startDay, endDay)) { return }
+      if (this.periodValidation(startDay, endDay)) { return }
       const schedules = {
         period_start_at: startDay.toDateString(),
         period_end_at: endDay.toDateString(),
@@ -194,6 +193,7 @@ export default defineComponent({
     createSetting() {
       const startDay = new Date(this.year, (this.selectedStartMonth - 1), this.selectedStartDay)
       const endDay = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
+      if (this.totalDaysValidation(startDay, endDay)) { return }
       if (this.periodValidation(startDay, endDay)) { return }
       const schedules = {
         period_start_at: startDay.toDateString(),
@@ -267,6 +267,7 @@ export default defineComponent({
         return true
       }
       for (let setting of this.settings) {
+        if (setting.id === this.settingId) { continue }
         const settingStartAt = new Date(setting.period_start_at)
         const settingEndAt = new Date(setting.period_end_at)
         if (((startDay <= settingStartAt) && (endDay >= settingStartAt)) ||
@@ -278,6 +279,17 @@ export default defineComponent({
         }
       }
       if (invalid) { return true }
+    },
+    totalDaysValidation(startDay, endDay) {
+      this.errors = []
+      let calendar = []
+      for (let day = new Date(startDay.getTime()); day <= endDay; day.setDate(day.getDate()+1)) {
+        calendar.push(day)
+      }
+      if ((this.totalWorkingDays < 0)||(this.totalWorkingDays > calendar.length)) {
+        this.errors.push(`勤務日数は０以上期間内の日数(${calendar.length})以下にしてください。`)
+        return true
+      }
     },
   },
   emits: ['close'],

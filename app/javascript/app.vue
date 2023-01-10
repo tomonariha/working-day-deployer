@@ -241,12 +241,12 @@ export default defineComponent({
           })
         })
         for (let availableDay of availableDays) {
-          if (numberOfWorkingDays >= workingDaysRequired) {
-            break
-          }
           const day = new Date(availableDay)
           const schedule = schedulesOfWeek[day.getDay()]
           if (schedule === "None") { continue }
+          if ((numberOfWorkingDays >= workingDaysRequired) && !(schedule === "off")) {
+            continue
+          }
           this.insertSchedule(day, schedule)
           if (schedule === 'full-time') {
             numberOfWorkingDays++
