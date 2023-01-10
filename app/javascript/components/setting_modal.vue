@@ -158,9 +158,6 @@ export default defineComponent({
     reflectSetting(setting) {
       const startDay = new Date(setting.period_start_at)
       const endDay = new Date(setting.period_end_at)
-      if(this.periodValidation(startDay, endDay)) { 
-        return
-      }
       this.totalWorkingDays = setting.total_working_days
       this.scheduleOfSunday = setting.schedule_of_sunday
       this.scheduleOfMonday = setting.schedule_of_monday
@@ -197,9 +194,7 @@ export default defineComponent({
     createSetting() {
       const startDay = new Date(this.year, (this.selectedStartMonth - 1), this.selectedStartDay)
       const endDay = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
-      if (this.periodValidation(startDay, endDay)) { 
-        return
-      }
+      if (this.periodValidation(startDay, endDay)) { return }
       const schedules = {
         period_start_at: startDay.toDateString(),
         period_end_at: endDay.toDateString(),
@@ -275,7 +270,8 @@ export default defineComponent({
         const settingStartAt = new Date(setting.period_start_at)
         const settingEndAt = new Date(setting.period_end_at)
         if (((startDay <= settingStartAt) && (endDay >= settingStartAt)) ||
-          ((startDay <= settingEndAt) && (endDay >= settingEndAt))) {
+          ((startDay <= settingEndAt) && (endDay >= settingEndAt)) ||
+          ((startDay > settingStartAt) && (endDay < settingEndAt))) {
           this.errors.push("他の条件の期間と重ならないようにしてください。")
           invalid = true
           break
