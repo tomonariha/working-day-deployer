@@ -1,8 +1,9 @@
 <template>
+{{}}
   <button v-on:click="openModal()">条件の入力</button>
     <div id=overlay  v-show="showContent">
       <div id=content>
-        <Modal v-bind:year="calendarYear" v-bind:settings="settings" v-on:close="closeModal()"></Modal>
+        <Modal v-bind:year="calendarYear" v-bind:settings="settings" v-on:close="closeModal()" v-on:update="updateSetting"></Modal>
       </div>
     </div>
   <button class="calendar-nav__previous" @click='previousMonth'>前</button>
@@ -266,6 +267,7 @@ export default defineComponent({
       })
     },
     fetchSettings() {
+      this.settings = []
       fetch(`api/calendars/${this.calendarYear}/settings.json`, {
         method: 'GET',
         headers: {
@@ -307,8 +309,6 @@ export default defineComponent({
       }
     },
     fetchCalendarAndSettings() {
-      this.calendarDays = [],
-      this.settings = [],
       (async () => {
         await this.fetchCalendar()
         await this.fetchSettings()
@@ -362,7 +362,22 @@ export default defineComponent({
       .catch((error) => {
         console.warn(error)
       })
-    }
+    },
+    updateSetting(updatedSetting) {
+      updatedSetting.period_start_at = this.formatUpdatedDay(updatedSetting.period_start_at)
+      updatedSetting.period_end_at = this.formatUpdatedDay(updatedSetting.period_end_at)
+      for (let setting of this.settings) {
+        if(setting.id === updatedSetting.id) {
+          this.settings.splice(this.settings.indexOf(setting), 1, updatedSetting)
+          break
+        }
+      }
+    },
+    formatUpdatedDay(updatedDay) {
+      let day = new Date(updatedDay)
+      const formatedUpdatedDay = day.getFullYear() + "-" + this.formatMonth(day.getMonth() + 1) + "-" + this.formatDay(day.getDate())
+      return formatedUpdatedDay
+    },
   },
   components: {
     Modal,

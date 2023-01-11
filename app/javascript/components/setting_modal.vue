@@ -45,8 +45,8 @@
   <input type="radio" id="morning" value="morning" v-model="$data['scheduleOf' + this.weekday[this.weekdayNumber]]" />
   <label for="morning">午前出勤</label>
   <br/>
-  <input type="radio" id="after-noon" value="after-noon" v-model="$data['scheduleOf' + this.weekday[this.weekdayNumber]]" />
-  <label for="after-noon">午後出勤</label>
+  <input type="radio" id="afternoon" value="afternoon" v-model="$data['scheduleOf' + this.weekday[this.weekdayNumber]]" />
+  <label for="afternoon">午後出勤</label>
   <br/>
   <input type="radio" id="off" value="off" v-model="$data['scheduleOf' + this.weekday[this.weekdayNumber]]" />
   <label for="off">休み</label>
@@ -128,7 +128,7 @@ export default defineComponent({
       const endDay = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
       if (this.totalDaysValidation(startDay, endDay)) { return }
       if (this.periodValidation(startDay, endDay)) { return }
-      const schedules = {
+      const setting = {
         period_start_at: startDay.toDateString(),
         period_end_at: endDay.toDateString(),
         total_working_days: this.setTotalWorkingDays(),
@@ -147,12 +147,14 @@ export default defineComponent({
         'X-CSRF-Token': this.token(),
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(schedules),
+      body: JSON.stringify(setting),
       credentials: 'same-origin'
       })
       .catch((error) => {
         console.warn(error)
       })
+      setting['id'] = this.settingId
+      this.$emit('update', setting)
     },
     reflectSetting(setting) {
       const startDay = new Date(setting.period_start_at)
@@ -292,6 +294,6 @@ export default defineComponent({
       }
     },
   },
-  emits: ['close'],
+  emits: ['close', 'update'],
 })
 </script>
