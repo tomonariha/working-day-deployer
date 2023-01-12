@@ -5,8 +5,7 @@ class Api::SettingsController < ApplicationController
     @settings = User.find(current_user.id).calendars.find_by(year: params[:calendar_year]).settings
   end
 
-  def show
-  end
+  def show; end
 
   def create
     @calendar = User.find(current_user.id).calendars.find_by(year: params[:calendar_year])
@@ -36,7 +35,7 @@ class Api::SettingsController < ApplicationController
       :schedule_of_saturday,
       :total_working_days,
       :period_start_at,
-      :period_end_at,
+      :period_end_at
     )
   end
 end

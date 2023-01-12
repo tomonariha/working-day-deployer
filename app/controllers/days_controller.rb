@@ -6,7 +6,7 @@ class DaysController < ApplicationController
 
   def destroy
     day = @calendar.days.find_by(date: @target_day)
-    day.delete if day
+    day&.delete
   end
 
   def update
