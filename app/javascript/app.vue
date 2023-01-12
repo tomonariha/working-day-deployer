@@ -3,7 +3,13 @@
   <button v-on:click="openModal()">条件の入力</button>
     <div id=overlay  v-show="showContent">
       <div id=content>
-        <Modal v-bind:year="calendarYear" v-bind:settings="settings" v-on:close="closeModal()" v-on:update="updateSetting"></Modal>
+        <Modal v-bind:year="calendarYear"
+               v-bind:settings="settings"
+               v-on:close="closeModal"
+               v-on:update="updateSetting"
+               v-on:create="createSetting"
+        >
+        </Modal>
       </div>
     </div>
   <button class="calendar-nav__previous" @click='previousMonth'>前</button>
@@ -378,6 +384,11 @@ export default defineComponent({
       const formatedUpdatedDay = day.getFullYear() + "-" + this.formatMonth(day.getMonth() + 1) + "-" + this.formatDay(day.getDate())
       return formatedUpdatedDay
     },
+    createSetting(createdSetting) {
+      createdSetting.period_start_at = this.formatUpdatedDay(createdSetting.period_start_at)
+      createdSetting.period_end_at = this.formatUpdatedDay(createdSetting.period_end_at)
+      this.settings.push(createdSetting)
+    }
   },
   components: {
     Modal,

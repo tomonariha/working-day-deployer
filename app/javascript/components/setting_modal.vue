@@ -197,7 +197,7 @@ export default defineComponent({
       const endDay = new Date(this.year, (this.selectedEndMonth - 1), this.selectedEndDay)
       if (this.totalDaysValidation(startDay, endDay)) { return }
       if (this.periodValidation(startDay, endDay)) { return }
-      const schedules = {
+      const setting = {
         period_start_at: startDay.toDateString(),
         period_end_at: endDay.toDateString(),
         total_working_days: this.setTotalWorkingDays(),
@@ -216,8 +216,15 @@ export default defineComponent({
         'X-CSRF-Token': this.token(),
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(schedules),
+      body: JSON.stringify(setting),
       credentials: 'same-origin'
+      })
+      .then((response) => {
+        return response.json()
+      })
+      .then((json) => {
+        setting['id'] = json.id
+        this.$emit('create', setting)
       })
       .catch((error) => {
         console.warn(error)
@@ -294,6 +301,6 @@ export default defineComponent({
       }
     },
   },
-  emits: ['close', 'update'],
+  emits: ['close', 'update', 'create']
 })
 </script>
