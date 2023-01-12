@@ -191,6 +191,7 @@ export default defineComponent({
       .catch((error) => {
         console.warn(error)
       })
+      this.$emit('delete', settingId)
     },
     createSetting() {
       const startDay = new Date(this.year, (this.selectedStartMonth - 1), this.selectedStartDay)
@@ -301,6 +302,6 @@ export default defineComponent({
       }
     },
   },
-  emits: ['close', 'update', 'create']
+  emits: ['close', 'update', 'create', 'delete']
 })
 </script>

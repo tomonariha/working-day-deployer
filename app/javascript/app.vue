@@ -1,5 +1,4 @@
 <template>
-{{}}
   <button v-on:click="openModal()">条件の入力</button>
     <div id=overlay  v-show="showContent">
       <div id=content>
@@ -8,6 +7,7 @@
                v-on:close="closeModal"
                v-on:update="updateSetting"
                v-on:create="createSetting"
+               v-on:delete="deleteSetting"
         >
         </Modal>
       </div>
@@ -388,7 +388,15 @@ export default defineComponent({
       createdSetting.period_start_at = this.formatUpdatedDay(createdSetting.period_start_at)
       createdSetting.period_end_at = this.formatUpdatedDay(createdSetting.period_end_at)
       this.settings.push(createdSetting)
-    }
+    },
+    deleteSetting(settingId) {
+      for (let setting of this.settings) {
+        if (setting.id === settingId) {
+          this.settings.splice(this.settings.indexOf(setting), 1)
+          break
+        }
+      }
+    },
   },
   components: {
     Modal,
